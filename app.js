@@ -1,4 +1,10 @@
-const newLibrary = [];
+// to do list
+// is addbook method too long?
+// mark read method on library class
+// remove book method on library class with button
+// reindex when book is removed
+// check box for read/not read
+
 
 class Book {
   constructor(id, title, author, read) {
@@ -26,8 +32,10 @@ class Library {
     ]; 
     let newBook = new Book(book[0], book[1], book[2], book[3]);
     this.bookList.push(newBook);
-    
+
     let newTr = document.createElement(`tr`);
+    newTr.className = `bookLineItem`;
+    newTr.setAttribute(`whichBook`, `${book[0]}`) //add attribute to pull ID number off html TR event listener
     for (let i = 0; i < book.length; i++) {
       //creates 3 tables elements to add to newTr 
       let newTd = document.createElement(`td`);
@@ -46,11 +54,48 @@ class Library {
     }
     tableBody.appendChild(newTr);
     
+     newTr.addEventListener(`click`, chrisLibrary.buildModal);//creates a listener on the book list table row
+
     titleInput.value = ""; //resets input fields
     authorInput.value = "";
     readYesNo.checked = false; 
     submitButton.disabled = true;
   };
+
+   buildModal = (index, title, author, read) => {
+   let bookPosition = event.target.parentNode.getAttribute(`whichBook`);
+   console.log(chrisLibrary);
+  const  modalDiv = document.createElement(`div`);
+  modalDiv.id = `modal`;
+  const  modalCard = document.createElement(`div`);
+  modalCard.className = `modal-card`;
+  const removeModal = document.createElement(`button`);
+  removeModal.id = `removeModal`;
+  removeModal.textContent = "Put Back";
+  const discardBook = document.createElement(`button`);
+  discardBook.id = `discardBook`;
+  discardBook.textContent = "Discard Book";
+  const markRead = document.createElement(`button`);
+  markRead.id = `markRead`;
+  markRead.textContent = "Mark Read";
+  const modalPara = document.createElement(`p`);
+  modalPara.textContent = `${this.bookList[bookPosition - 1].title}, by ${this.bookList[bookPosition - 1].author}`; //displays the name of the book and the author in the paragraph tab
+  
+  contentDiv.appendChild(modalDiv);
+  modalDiv.appendChild(modalCard);
+  modalCard.appendChild(removeModal);
+  modalCard.appendChild(discardBook);
+  modalCard.appendChild(markRead);
+  modalCard.appendChild(modalPara);
+
+  
+  const removeModalAction = document.querySelector(`#removeModal`);
+  removeModalAction.addEventListener(`click`, hide);
+  
+  function hide(event) {
+      contentDiv.removeChild(modalDiv);
+  }
+  }
 }
 
 let chrisLibrary = new Library();
@@ -59,6 +104,8 @@ const titleInput = document.querySelector(`#titleInput`);
 const authorInput = document.querySelector(`#authorInput`);
 const readYesNo = document.querySelector(`#readYesNo`);
 const submitButton = document.querySelector(`#submitButton`);
+const bookInfoInput = document.querySelector(`.book-info-input`);
+const contentDiv = document.querySelector(`.content`);
 
 submitButton.addEventListener(`click`, chrisLibrary.addBook);
 
@@ -74,3 +121,5 @@ function enableSubmit() {
   }
   submitButton.disabled = !isValid;
 }
+
+

@@ -2,17 +2,15 @@
   box-sizing: border-box;
 }
 
+/* element styles */
 html {
   background: url(/library_background.jpg) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
   background-size: cover;
 }
 
 main {
   height: 100vh;
-  background-color: rgba(235, 230, 230, 0.7);
+  background-color: rgba(235, 230, 230, 0.5);
   z-index: 10;
   margin: 1rem;
   display: flex;
@@ -22,6 +20,51 @@ main {
   border-radius: 2rem;
 
 }
+
+button {
+  width: 100px;
+  margin: 1rem 1rem;
+  background-color:whitesmoke;
+  border-radius: 1rem;
+  transition: all .5s;
+  cursor: pointer;
+}
+
+.bookLineItem:hover {
+  font-weight: bolder;
+  font-size: larger;
+  cursor: pointer;
+}
+
+/* Button animation start */
+button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: .5s;
+}
+
+button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: .5s;
+}
+
+button:hover span {
+  padding-right: 15px;
+}
+
+button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+/* button animation end */
+
+/* class styles */
 
 .content {
   display: flex;
@@ -35,22 +78,55 @@ main {
 }
 
 .book-info-input {
-    border: 2px solid red;
     margin: 0 2rem;
     padding: 1rem;
     background-color:rgba(43, 43, 43, 0.5);
     display: flex;
     align-items: center;
     justify-content: space-around;
+    border-radius: 2rem;
 
-}
-
-#table {
-  min-width: 680px;
-  margin: 2rem;
-  border: 2px solid red;
 }
 
 .input-box {
     text-align: center;
+    border-radius: 1rem;
 }
+
+/* id styles */
+
+#table {
+  min-width: 680px;
+  margin: 2rem;
+  background-color:rgba(43, 43, 43, 0.5);
+  border-radius: 2rem;
+}
+
+#submitButton {
+  margin: 1rem auto;
+}
+
+
+/* modal style start */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 10;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-card {
+  padding: 3rem;
+  background-color: white;
+  border-radius: 10px;
+  color: #000014;
+}
+
+/* modal style end */
+
