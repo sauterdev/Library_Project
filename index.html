@@ -3,34 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
     <title>Library Project</title>
   </head>
   <body>
-    <main
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-      "
-    >
-      <div>
-        <h1>Library Project</h1>
+    <main>
+      <div class="content">
+        <h1>Chris's Library</h1>
+        <div class = "book-info-input">
+          <input type="text" class="input-box required-input" id="titleInput" name="titleInput" placeholder="Book Title" onkeyup="enableSubmit()">
+          <input type="text" class="input-box required-input" id="authorInput" name="authorInput" placeholder="Author" onkeyup="enableSubmit()">
+          <div>
+          <label for="readYesNo">Read?</label>
+          <input type="checkbox" name="readYesNo" id="readYesNo">
+          </div>
+        </div>
+        <button type="submit" id="submitButton" disabled >Add Book</button>
+        
         <div id="library">
           <!-- Add table here -->
-          <table id="table" style="min-width: 680px; margin: 2rem">
+          <table id="table">
             <thead>
               <tr>
+                <th>Index</th>
                 <th>Title</th>
                 <th>Author</th>
                 <th>Read</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <!-- <tr>
+                <td>0</td>
                 <td>Name of the Wind</td>
                 <td>Patrick Rothfuss</td>
-                <td>
+                <td>Steve
                   <input
                     type="checkbox"
                     name="read"
@@ -38,13 +45,11 @@
                     checked
                     disabled
                   />
-                </td>
-              </tr>
+                </td>s
+              </tr> -->
             </tbody>
           </table>
         </div>
     </main>
-
-    <script src="app.js"></script>
   </body>
 </html>
