@@ -1,12 +1,6 @@
-// to do list
-// mark read method on library class
-// remove book method on library class
-// reindex when book is removed
-// check box for read/not read
-
 class Book {
-  constructor(id, title, author, read) {
-    this.id = "";
+  constructor(shelfId, title, author, read) {
+    this.shelfId = shelfId;
     this.title = title;
     this.author = author;
     this.read = read;
@@ -18,69 +12,83 @@ class Library {
   bookCount = 0;
   bookPosition = 0; //identifies position when modals are created
 
-  markRead(param) {}
-
   addBook = () => {
     this.bookCount++;
-    //build array to easier create table elements with loop
-    let book = [
-      this.bookCount,
+    let newBook = new Book(
+      this.bookList.length + 1,
       titleInput.value,
       authorInput.value,
-      readYesNo.checked,
-    ];
-    let newBook = new Book(book[0], book[1], book[2], book[3]);
+      readYesNo.checked
+    );
     this.bookList.push(newBook);
-
-    let newTr = document.createElement(`tr`);
-    newTr.className = `bookLineItem`;
-    newTr.setAttribute(`whichBook`, `${book[0]}`); //add attribute to pull ID number off html TR event listener
-    for (let i = 0; i < book.length; i++) {
-      //creates 3 tables elements to add to newTr
-      let newTd = document.createElement(`td`);
-      newTd.textContent = book[i];
-      newTr.appendChild(newTd);
-      if (i == book.length - 1) {
-        // add check box to last table row
-        let checkButton = document.createElement(`input`);
-        checkButton.type = `checkbox`;
-        checkButton.name = `read`;
-        checkButton.id = `readLibraryCheckbox`;
-        checkButton.checked = readYesNo.checked;
-        checkButton.disabled = true;
-        newTd.appendChild(checkButton);
-        checkButton.previousSibling.remove(); //removes true/false from display
-      }
-    }
-    tableBody.appendChild(newTr);
-
-    newTr.addEventListener(`click`, chrisLibrary.buildModal); //creates a listener on the book list table row
 
     titleInput.value = ""; //resets input fields
     authorInput.value = "";
     readYesNo.checked = false;
     submitButton.disabled = true;
+
+    this.putBookOnShelf(newBook);
+  };
+
+  //creates new row with 4 data cells for the book information. Adds listener on the the index cell to create a modal
+  putBookOnShelf = (book) => {
+    let newTr = document.createElement(`tr`);
+    let new4Tds = [];
+    let td1 = document.createElement(`td`);
+    td1.textContent = book.shelfId;
+    td1.className = "text-hover";
+    new4Tds.push(td1);
+    let td2 = document.createElement(`td`);
+    td2.textContent = book.title;
+    new4Tds.push(td2);
+    let td3 = document.createElement(`td`);
+    td3.textContent = book.author;
+    new4Tds.push(td3);
+    let td4 = document.createElement(`td`);
+    td4.textContent = book.read;
+    new4Tds.push(td4);
+
+    new4Tds[0].addEventListener(`click`, this.buildModal); //sets listener to build modal when index is clicked on table
+
+    new4Tds.forEach((ele) => newTr.appendChild(ele));
+    tableBody.appendChild(newTr);
+  };
+
+  //removes table data and reconstructs. Reindexes books on shelf when items are removed
+  reorgBookshelf = () => {
+    tableBody.innerHTML = "";
+    this.bookCount = this.bookList.length;
+    // while (tableBody.firstChild) {
+    //   tableBody.removeChild(tableBody.firstChild);
+    // }
+    for (let i = 0; i < this.bookList.length; i++) {
+      this.bookList[i].shelfId = i + 1;
+      this.putBookOnShelf(this.bookList[i]);
+    }
   };
 
   buildModal = () => {
-    this.bookPosition = event.target.parentNode.getAttribute(`whichBook`);
+    this.bookPosition = event.target.textContent;
     const modalDiv = document.createElement(`div`);
     modalDiv.id = `modal`;
     const modalCard = document.createElement(`div`);
     modalCard.className = `modal-card`;
     const removeModal = document.createElement(`button`);
     removeModal.id = `removeModal`;
-    removeModal.textContent = "Put Back";
+    removeModal.innerHTML = `<span>Put Back</span>`; //span has button animation css styles
     const removeBook = document.createElement(`button`);
     removeBook.id = `removeBook`;
-    removeBook.textContent = "Remove Book";
+    removeBook.innerHTML = `<span>Remove Book</span>`; 
     const markRead = document.createElement(`button`);
     markRead.id = `markRead`;
-    markRead.textContent = "Mark Read";
+    if (this.bookList[this.bookPosition - 1].read) {
+      markRead.disabled = true;
+    }
+    markRead.innerHTML = `<span>Mark Read</span>`;
     const modalPara = document.createElement(`p`);
-    modalPara.textContent = `${this.bookList[this.bookPosition - 1].title}, by ${
-      this.bookList[this.bookPosition - 1].author //displays the name of the book and the author in the paragraph tab
-    }`; 
+    modalPara.textContent = `${
+      this.bookList[this.bookPosition - 1].title
+    }, by ${this.bookList[this.bookPosition - 1].author}`;
 
     contentDiv.appendChild(modalDiv);
     modalDiv.appendChild(modalCard);
@@ -89,30 +97,28 @@ class Library {
     modalCard.appendChild(markRead);
     modalCard.appendChild(modalPara);
 
-    //should this be its own method? YES to remove when hitting other buttons
-    const removeModalAction = document.querySelector(`#removeModal`);
-    removeModalAction.addEventListener(`click`, hideModal);
-
-    function hideModal(event) {
-      contentDiv.removeChild(modalDiv);
-    }
-
-    removeBook.addEventListener(`click`, chrisLibrary.discardBook)
+    //sets listeners on 3 created buttons
+    removeModal.addEventListener(`click`, this.hideModal);
+    removeBook.addEventListener(`click`, this.discardBook);
+    markRead.addEventListener(`click`, this.changeReadStatus);
   };
 
+  hideModal = () => {
+    const removeThisModal = document.querySelector(`#modal`);
+    contentDiv.removeChild(removeThisModal);
+  };
+
+  changeReadStatus = () => {
+    this.bookList[this.bookPosition - 1].read = true;
+    this.reorgBookshelf();
+    this.hideModal();
+  };
 
   discardBook = () => {
-    console.log(this.bookList)
-    console.log(this.bookCount)
-    console.log(this.bookPosition)
-    this.bookList.splice((this.bookPosition - 1), 1);
-    console.log(this.bookList)
-    console.log(this.bookCount)
-    console.log(this.bookPosition)
-
-
-  }    
-
+    this.bookList.splice(this.bookPosition - 1, 1);
+    this.reorgBookshelf();
+    this.hideModal();
+  };
 }
 
 let chrisLibrary = new Library();
@@ -123,9 +129,10 @@ const readYesNo = document.querySelector(`#readYesNo`);
 const submitButton = document.querySelector(`#submitButton`);
 const bookInfoInput = document.querySelector(`.book-info-input`);
 const contentDiv = document.querySelector(`.content`);
+let removeModalAction;
+let modalDiv;
 
 submitButton.addEventListener(`click`, chrisLibrary.addBook);
-
 
 //function runs on key up events for two input fields. If either is empty, the `add-book` button is disabled
 function enableSubmit() {

@@ -22,7 +22,7 @@ main {
 }
 
 button {
-  width: 100px;
+  width: 120px;
   margin: 1rem 1rem;
   background-color:whitesmoke;
   border-radius: 1rem;
@@ -30,7 +30,13 @@ button {
   cursor: pointer;
 }
 
-.bookLineItem:hover {
+p {
+  margin: 1rem auto;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.text-hover:hover {
   font-weight: bolder;
   font-size: larger;
   cursor: pointer;
@@ -97,7 +103,6 @@ button:hover span:after {
 
 #table {
   min-width: 680px;
-  margin: 2rem;
   background-color:rgba(43, 43, 43, 0.5);
   border-radius: 2rem;
 }
